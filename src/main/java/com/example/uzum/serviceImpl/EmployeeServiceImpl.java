@@ -603,13 +603,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         for (Employee admin : admins) {
             String emailContent = emailService.buildEmailForWarningAboutPaySalaries(admin.getFirstname() + " " + admin.getLastname(), admin.getEmail(), "FIRE! Money isn't enough to pay salaries.", amountOfEmployeesThatAreNotPaidSalaries, amountOfMoneyToBePaid, yearOfPreviousMonth, monthOfPreviousMonth, false);
             emailService.sendEmail(emailContent, admin.getPhoneNumber(), "Money isn't enough to pay salaries.", admin.getEmail());
-//            twilioSmsSender.sendSms(admin.getPhoneNumber(), String.format(Messages.MESSAGE_FOR_SMS, admin.getFirstname(), "Director", amountOfEmployeesThatAreNotPaidSalaries, amountOfMoneyToBePaid));
+            twilioSmsSender.sendSms(admin.getPhoneNumber(), String.format(Messages.MESSAGE_FOR_SMS, admin.getFirstname(), "Director", amountOfEmployeesThatAreNotPaidSalaries, amountOfMoneyToBePaid));
             logger.info("Email sent to {} for warning about that money isn't enough to pay salaries. ", admin.getPhoneNumber());
             logger.info("SMS sent to {} for warning about that money isn't enough to pay salaries. ", admin.getPhoneNumber());
         }
         String emailContent = emailService.buildEmailForWarningAboutPaySalaries(director.getFirstname() + " " + director.getLastname(), director.getEmail(), "FIRE! Money isn't enough to pay salaries.", amountOfEmployeesThatAreNotPaidSalaries, amountOfMoneyToBePaid, yearOfPreviousMonth, monthOfPreviousMonth, true);
         emailService.sendEmail(emailContent, director.getPhoneNumber(), "Money isn't enough to pay salaries.", director.getEmail());
-//        twilioSmsSender.sendSms(director.getPhoneNumber(), String.format(Messages.MESSAGE_FOR_SMS, director.getFirstname(), "Admins", amountOfEmployeesThatAreNotPaidSalaries, amountOfMoneyToBePaid));
+        twilioSmsSender.sendSms(director.getPhoneNumber(), String.format(Messages.MESSAGE_FOR_SMS, director.getFirstname(), "Admins", amountOfEmployeesThatAreNotPaidSalaries, amountOfMoneyToBePaid));
         logger.info("Email sent to {} for warning about that money isn't enough to pay salaries. ", director.getPhoneNumber());
         logger.info("SMS sent to {} for warning about that money isn't enough to pay salaries. ", director.getPhoneNumber());
     }

@@ -92,7 +92,7 @@ public class BuyerServiceImpl implements BuyerService {
         buyer.setAuthorities(authorities);
         buyer.setPhoneNumber(phoneNumber);
         String verificationCode = generateVerificationCode();
-//        twilioSmsSender.sendSms(phoneNumber, String.format(Messages.SEND_SMS_REGISTER, verificationCode));
+        twilioSmsSender.sendSms(phoneNumber, String.format(Messages.SEND_SMS_REGISTER, verificationCode));
         logger.info("SMS sent to {} for registering. Verification code: {} ", dto.getPhoneNumber(), verificationCode);
         buyer = buyerRepo.save(buyer);
         buyer.setReferralLink(buyer.getReferralLink() + buyer.getId());
@@ -392,13 +392,13 @@ public class BuyerServiceImpl implements BuyerService {
     private void sendSmsAndSaveNewToken(String phoneNumber, String newPhoneNumber, Buyer buyer, boolean isUserRegistrationOrLogin) {
         String verificationCode = generateVerificationCode();
         if (newPhoneNumber != null) {
-            //            twilioSmsSender.sendSms(newPhoneNumber, String.format(Messages.SEND_SMS_TO_CHANGE_PHONE_NUMBER, verificationCode));
+                        twilioSmsSender.sendSms(newPhoneNumber, String.format(Messages.SEND_SMS_TO_CHANGE_PHONE_NUMBER, verificationCode));
             logger.info("SMS sent to {} for changing phone number. Verification code is {} .", newPhoneNumber, verificationCode);
         } else if (isUserRegistrationOrLogin) {
-//            twilioSmsSender.sendSms(phoneNumber, String.format(Messages.SEND_SMS_LOGIN, verificationCode));
+            twilioSmsSender.sendSms(phoneNumber, String.format(Messages.SEND_SMS_LOGIN, verificationCode));
             logger.info("SMS sent to {} for logging in. Verification code is {} ", phoneNumber, verificationCode);
         } else {
-//                        twilioSmsSender.sendSms(phoneNumber, String.format(Messages.SEND_SMS_REGISTER, verificationCode));
+                        twilioSmsSender.sendSms(phoneNumber, String.format(Messages.SEND_SMS_REGISTER, verificationCode));
             logger.info("SMS sent to {} for registering. Verification code is {} ", phoneNumber, verificationCode);
         }
         ConfirmationToken newToken = ConfirmationToken.builder()
