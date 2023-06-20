@@ -17,7 +17,8 @@ public class StringUtils {
 
 
     public static String capitalizeText(String text) {
-        text = text.trim();
+        if (text == null) return null;
+        text = text.trim ();
         if (text.isEmpty()) return null;
         String firstLetter = text.substring(0, 1).toUpperCase();
         return firstLetter.concat(text.substring(1).toLowerCase());

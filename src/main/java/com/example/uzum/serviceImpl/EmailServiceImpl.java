@@ -14,7 +14,7 @@ import java.io.IOException;
 public class EmailServiceImpl implements EmailService {
 
     private static final Logger logger = LogManager.getLogger(EmailServiceImpl.class);
-    private static final String emailApiKey = "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";
+    private static final String emailApiKey = "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";
     private final String verificationLinkBaseForEmployee = "http://localhost:8080/api/employee/confirm-email?token=";
     private final String verificationLinkBaseForBuyer = "http://localhost:8080/api/buyer/confirm-email?token=";
 

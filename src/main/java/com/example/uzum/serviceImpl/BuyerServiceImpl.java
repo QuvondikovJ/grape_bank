@@ -200,12 +200,12 @@ public class BuyerServiceImpl implements BuyerService {
         if (optional.isEmpty()) return new Result<>(false, Messages.SUCH_USER_ID_NOT_EXIST);
         Buyer buyer = optional.get();
         Buyer buyerThatEnteredToSystem = null;
-        String cipheredCardNumber = buyer.getCardNumber();
-        String cardNumber = encryptAndDecrypt.decryptCardDetail(cipheredCardNumber);
-        String secretCardNumber = "**** **** **" + cardNumber.substring(10, 12) + " " + cardNumber.substring(12);
-        String secretCardExpireDate = "**/**";
-        buyer.setCardNumber(secretCardNumber);
-        buyer.setCardExpireDate(secretCardExpireDate);
+//        String cipheredCardNumber = buyer.getCardNumber();  WHEN CODE IS READY TO PRODUCTION, THEN DO UNCOMMENT THIS CODE!
+//        String cardNumber = encryptAndDecrypt.decryptCardDetail(cipheredCardNumber);
+//        String secretCardNumber = "**** **** **" + cardNumber.substring(10, 12) + " " + cardNumber.substring(12);
+//        String secretCardExpireDate = "**/**";
+//        buyer.setCardNumber(secretCardNumber);
+//        buyer.setCardExpireDate(secretCardExpireDate);
         try {
             buyerThatEnteredToSystem = (Buyer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         } catch (Exception e) {
@@ -327,8 +327,8 @@ public class BuyerServiceImpl implements BuyerService {
         buyer.setFirstname(capitalizeText(dto.getFirstname()));
         buyer.setLastname(capitalizeText(dto.getLastname()));
         buyer.setMiddleName(capitalizeText(dto.getMiddleName()));
-        buyer.setBirthDate(Timestamp.valueOf(LocalDate.parse(dto.getBirthDate()).atStartOfDay()));
-        buyer.setGender(Gender.valueOf(dto.getGender().toUpperCase()));
+        buyer.setBirthDate(dto.getBirthDate() != null ? Timestamp.valueOf(LocalDate.parse(dto.getBirthDate()).atStartOfDay()) : null);
+        buyer.setGender(dto.getGender() != null ? Gender.valueOf(dto.getGender().toUpperCase()) : null);
         buyerRepo.save(buyer);
         logger.info("Buyer updated. ID: {} ", buyer.getId());
         return new Result<>(true, Messages.BUYER_UPDATED);
@@ -392,13 +392,13 @@ public class BuyerServiceImpl implements BuyerService {
     private void sendSmsAndSaveNewToken(String phoneNumber, String newPhoneNumber, Buyer buyer, boolean isUserRegistrationOrLogin) {
         String verificationCode = generateVerificationCode();
         if (newPhoneNumber != null) {
-                        twilioSmsSender.sendSms(newPhoneNumber, String.format(Messages.SEND_SMS_TO_CHANGE_PHONE_NUMBER, verificationCode));
+            twilioSmsSender.sendSms(newPhoneNumber, String.format(Messages.SEND_SMS_TO_CHANGE_PHONE_NUMBER, verificationCode));
             logger.info("SMS sent to {} for changing phone number. Verification code is {} .", newPhoneNumber, verificationCode);
         } else if (isUserRegistrationOrLogin) {
             twilioSmsSender.sendSms(phoneNumber, String.format(Messages.SEND_SMS_LOGIN, verificationCode));
             logger.info("SMS sent to {} for logging in. Verification code is {} ", phoneNumber, verificationCode);
         } else {
-                        twilioSmsSender.sendSms(phoneNumber, String.format(Messages.SEND_SMS_REGISTER, verificationCode));
+            twilioSmsSender.sendSms(phoneNumber, String.format(Messages.SEND_SMS_REGISTER, verificationCode));
             logger.info("SMS sent to {} for registering. Verification code is {} ", phoneNumber, verificationCode);
         }
         ConfirmationToken newToken = ConfirmationToken.builder()
@@ -522,7 +522,6 @@ public class BuyerServiceImpl implements BuyerService {
         logger.info("Buyer unblocked. ID: {}  ", id);
         return new Result<>(true, Messages.BUYER_UNBLOCKED);
     }
-
 
 
 }
