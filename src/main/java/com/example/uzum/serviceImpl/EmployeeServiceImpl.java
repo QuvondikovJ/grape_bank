@@ -146,7 +146,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             if (existsByEmail) return new Result<>(false, Messages.THIS_EMAIL_BELONGS_TO_ANOTHER_USER);
             String uuid = UUID.randomUUID().toString();
             String emailContent = emailService.buildEmailForAuthorization(dto.getFirstname() + " " + dto.getLastname(), dto.getEmail(), "Authorization", uuid, false);
-//            emailService.sendEmail(emailContent, dto.getPhoneNumber(), "Authorization", dto.getEmail());
+            emailService.sendEmail(emailContent, dto.getPhoneNumber(), "Authorization", dto.getEmail());
             ConfirmationToken token = ConfirmationToken.builder()
                     .code(uuid)
                     .employee(employee)
@@ -159,7 +159,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         String verificationCode = generateVerificationCode();
         logger.info("SMS sent to {} ", dto.getPhoneNumber());
-//        twilioSmsSender.sendSms(dto.getPhoneNumber(), String.format(Messages.SEND_SMS_REGISTER, verificationCode));
+        twilioSmsSender.sendSms(dto.getPhoneNumber(), String.format(Messages.SEND_SMS_REGISTER, verificationCode));
         ConfirmationToken confirmationToken = ConfirmationToken.builder()
                 .employee(employee)
                 .code(verificationCode)
@@ -472,10 +472,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     private void sendSmsAndSaveNewToken(String phoneNumber, Employee employee, String newPhoneNumber) {
         String verificationCode = generateVerificationCode();
         if (newPhoneNumber == null) {
-//            twilioSmsSender.sendSms(phoneNumber, String.format(Messages.SEND_SMS_REGISTER, verificationCode));
+            twilioSmsSender.sendSms(phoneNumber, String.format(Messages.SEND_SMS_REGISTER, verificationCode));
             logger.info("Confirmation token saved and {} code sent to {} ", verificationCode, phoneNumber);
         } else {
-//            twilioSmsSender.sendSms(newPhoneNumber, String.format(Messages.SEND_SMS_TO_CHANGE_PHONE_NUMBER, verificationCode));
+            twilioSmsSender.sendSms(newPhoneNumber, String.format(Messages.SEND_SMS_TO_CHANGE_PHONE_NUMBER, verificationCode));
             logger.info("Confirmation token saved and {} code sent to {} for change phone number.", verificationCode, newPhoneNumber);
         }
         ConfirmationToken confirmationToken = ConfirmationToken.builder()
