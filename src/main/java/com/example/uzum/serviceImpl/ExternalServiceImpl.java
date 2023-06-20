@@ -5,6 +5,7 @@ import com.example.uzum.dto.externalService.ForecastDTO;
 import com.example.uzum.dto.externalService.GetWeatherDTO;
 import com.example.uzum.dto.externalService.LocationDTO;
 import com.example.uzum.dto.externalService.TodayDTO;
+import com.example.uzum.dto.externalServiceDto.CurrencyDTO;
 import com.example.uzum.helper.Filter;
 import com.example.uzum.helper.Messages;
 import com.example.uzum.service.ExternalService;
@@ -139,7 +140,26 @@ public class ExternalServiceImpl implements ExternalService {
         if (response.body() == null) return new Result<>(false, Messages.CLIENT_INPUT_ERROR);
         String jsonData = response.body().string();
         JSONArray jsonArray = new JSONArray(jsonData);
-        return new Result<>(true, jsonArray);
+        List<CurrencyDTO> dtos = new ArrayList<>();
+        CurrencyDTO currencyDTO;
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            currencyDTO = CurrencyDTO.builder()
+                    .id(jsonObject.getInt("id"))
+                    .code(jsonObject.getString("Code"))
+                    .ccy(jsonObject.getString("Ccy"))
+                    .ccyNm_RU(jsonObject.getString("CcyNm_RU"))
+                    .ccyNm_UZ(jsonObject.getString("CcyNm_UZ"))
+                    .ccyNm_UZC(jsonObject.getString("CcyNm_UZC"))
+                    .ccyNm_EN(jsonObject.getString("CcyNm_EN"))
+                    .nominal(jsonObject.getString("Nominal"))
+                    .rate(jsonObject.getString("Rate"))
+                    .diff(jsonObject.getString("Diff"))
+                    .date(jsonObject.getString("Date"))
+                    .build();
+            dtos.add(currencyDTO);
+        }
+        return new Result<>(true, dtos);
     }
 
     @Override
