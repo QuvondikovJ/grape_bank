@@ -124,20 +124,6 @@ public class BuyerServiceImpl implements BuyerService {
             buyer.setIsActive(true);
             buyerRepo.save(buyer);
             logger.info("Buyer is activated. ID: {} ", buyer.getId());
-            if (dto.getCookie() != null) {
-                Cookie cookie = dto.getCookie();
-                String cookieName = cookie.getName();
-                if (cookieName.startsWith("ID:")) {
-                    Integer referrerBuyerId = Integer.parseInt(cookieName.split(":")[1]);
-                    Optional<Buyer> optionalBuyer = buyerRepo.findByIdAndIsActive(referrerBuyerId, true);
-                    if (optionalBuyer.isPresent()) {
-                        Buyer referrerBuyer = optionalBuyer.get();
-                        referrerBuyer.setBalance(referrerBuyer.getBalance() + 3000);
-                        buyerRepo.save(referrerBuyer);
-                        logger.info("Balance filled by referral link. Referrer buyer ID: {}, Buyer ID that registered by referral link: {}.", referrerBuyerId, buyer.getId());
-                    }
-                }
-            }
         }
         String jwtToken = jwtUtil.generateToken(dto.getPhoneNumber());
         return new Result<>(true, jwtToken);

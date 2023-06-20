@@ -15,6 +15,4 @@ public class UserLoginDto {
     private String phoneNumber;
     private String password;
     private String code;
-    private Cookie cookie;
-
 }
